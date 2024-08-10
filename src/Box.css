@@ -1,0 +1,104 @@
+.grid-item {
+    background-color: #141a1e;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5vw;
+    border: 1px solid #282F39;
+}
+
+.box-calendar {
+    padding: 2vw;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-calender .label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.box-calendar .calendar-container {
+    width: 100%;
+    height: 100%;
+}
+
+.box-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.box-daily-pnl{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 1vw;
+    padding-top: 1vw;
+}
+.box-daily-pnl .label{
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.box-daily-pnl .chart-container {
+    width: 100%;
+    flex-grow: 1;
+}
+
+.box-net-profit-loss {
+    height: 10vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1vw;
+}
+
+.box-net-profit-loss .top-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1vw;
+}
+
+
+.box-net-profit-loss .label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #cccccc;
+}
+
+.box-net-profit-loss .value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3E3C48;
+}
+
+.box-net-profit-loss .total-trades,
+.box-net-profit-loss .average-trades {
+    font-size: 0.8rem;
+    color: #A4A5AA;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.box-net-profit-loss .value.positive,
+.box-net-profit-loss .average-trades.positive {
+    color: #59C0A4;
+}
+
+.box-net-profit-loss .value.negative,
+.box-net-profit-loss .average-trades.negative {
+    color: #F6BFBE;
+}

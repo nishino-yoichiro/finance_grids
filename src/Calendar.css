@@ -1,0 +1,94 @@
+.box-calendar {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-calendar .label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.box-calendar .calendar-container {
+    width: 100%;
+    height: 100%;
+}
+
+.calendar-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.custom-calendar {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.custom-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 10px;
+}
+
+.toolbar-left {
+    flex: 1;
+    text-align: left;
+}
+
+.toolbar-right {
+    flex: 1;
+    text-align: right;
+}
+
+.custom-toolbar button {
+    color: white;
+    background: transparent;
+    margin-left: 5px;
+}
+
+
+.custom-calendar .rbc-month-view {
+    background-color: #1a1f23;
+}
+
+.custom-calendar .rbc-month-view .rbc-day-bg {
+    background-color: #3a3f43;
+}
+
+
+.custom-calendar .rbc-month-view .rbc-off-range-bg {
+    background-color: #4c4f53;
+    color: #b0b0b0;
+}
+
+.custom-calendar .rbc-today {
+    background-color: inherit;
+    color: inherit;
+}
+
+.day-cell {
+    position: relative;
+}
+
+.day-cell::after {
+    content: attr(data-pnl);
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    padding: 2px;
+    font-size: 0.7em;
+    color: white;
+}
