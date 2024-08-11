@@ -225,6 +225,23 @@ def getPLCumulative (data_dict):
         cumulativePL[date] = cumulative
     return cumulativePL
 
+def getMoneyInvestedDaily (data_dict):
+    """
+    Calculates the money invested of the data for the day.
+
+    Args:
+        data_dict (dict): A dictionary with the new index variable as the key and a dictionary of data values
+
+    Returns:
+        dict: A dictionary with the date as the key and the money invested as the value.
+    """
+    dailyInvested = {}
+    for key, value in data_dict.items():
+        date = extract_date(value['Filled Time'])
+        if value['Side'] == 'Buy':
+            dailyInvested[date] = round(dailyInvested.get(date, 0) + float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
+    return dailyInvested
+
 def getDaysPL (data_dict, date):
     """
     Calculates the P&L of the data for a specific date.
@@ -313,6 +330,7 @@ def get_pnl():
         average_contract_size_change_from_past_year = 0
     average_winner_amount, average_winner_total_trades = getAverageWinner(trades_dict)
     average_loser_amount, average_loser_total_trades = getAverageLoser(trades_dict)
+    money_invested_by_day = getMoneyInvestedDaily(data_dict)
 
     result = {
         "PnL_By_Day": pnl_by_day,
@@ -325,6 +343,7 @@ def get_pnl():
         "Average_Winner_Total_Trades": average_winner_total_trades,
         "Average_Loser": average_loser_amount,
         "Average_Loser_Total_Trades": average_loser_total_trades,
+        "Money_Invested_By_Day": money_invested_by_day
     }
     return jsonify(result)
 

@@ -40,7 +40,7 @@ function App() {
         [
             { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Net Cumulative P&L", dataType: 'Cumulative_PnL' }},
             { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily P&L ", dataType: 'PnL_By_Day'}},
-            { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Net Cumulative P&L" }},
+            { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Volume Invested", dataType: 'Money_Invested_By_Day'}},
         ],
         [
             { type: 'Calendar', width: '94vw', height: '80vw', content: { label: "Calendar" }},
