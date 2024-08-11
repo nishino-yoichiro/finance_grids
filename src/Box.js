@@ -25,11 +25,13 @@ function Box({ type, width, height, content }) {
                                     </div>
                                 </>
                             ) : (
-                                <div className="top-row">
-                                    <div className={`value ${valueClass}`}>${Math.abs(content.value)}</div>
-                                    {content.variation === 'averageCons' && (
-                                        <div className={`average-trades ${averageTradesClass}`}>{Math.abs(content.averageTrades)}</div>
-                                    )}
+                                <div className="flex flex-col items-center">
+                                    <div className="flex flex-row items-center gap-2">
+                                        <div className={`value ${valueClass}`}>${Math.abs(content.value)}</div>
+                                        {content.variation === 'averageCons' && (
+                                            <div className={`average-trades ${averageTradesClass}`}>{Math.abs(content.averageTrades)}</div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                     </>

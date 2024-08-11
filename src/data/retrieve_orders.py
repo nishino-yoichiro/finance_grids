@@ -168,17 +168,6 @@ def getPLOverall (trades_dict):
     Returns:
         float: The P&L of the data.
     """
-    # soldAmount = 0
-    # boughtAmount = 0
-    # counter = 0
-    # for key, value in data_dict.items():
-    #     if value['Side'] == 'Sell':
-    #         soldAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
-    #         counter += 1
-    #     else:
-    #         boughtAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
-    #         counter += 1
-    # return soldAmount-boughtAmount, counter
     return sum(trades_dict.values()), len(trades_dict)
 
 def getPLDaily (data_dict):
