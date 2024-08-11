@@ -61,13 +61,104 @@ def getStockDict (data_dict):
         stock_dict[stock][key] = value
     return stock_dict
 
+def getTrades (data_dict):
+    """
+    Returns a dict of trades executed based on the data.
+
+    Args:
+        data_dict (dict): A dictionary with the new index variable as the key and a dictionary of data values
+    
+    Returns:
+        dict: A dictionary with the option contract as the key and the trade data as the value.
+    """
+    trades = {}
+    for buy in data_dict.values():
+        current_pnl = trades.get(buy['Symbol'], 0)
+        if buy['Side'] == 'Buy':
+            trades[buy['Symbol']] = current_pnl - float(buy['Avg Price']) * float(buy['Total Qty']) * 100
+        else:
+            trades[buy['Symbol']] = current_pnl + float(buy['Avg Price']) * float(buy['Total Qty']) * 100
+    return trades
+
+def getAverageContractSize(data_dict):
+    """
+    Calculates the average contract size of the data.
+
+    Args:
+        data_dict (dict): A dictionary with the new index variable as the key and a dictionary of data values
+
+    Returns:
+        float: The average contract size of the data.
+    """
+    contractSize = 0
+    counter = 0
+    for value in data_dict.values():
+        if(value['Side'] == 'Buy'):
+            contractSize += float(value['Avg Price'])
+            counter += 1
+    return round(contractSize / counter, 2)
+
+def getAverageContractSizeFromPastYear(data_dict):
+    """
+    Calculates the average contract size of the data for the past year.
+
+    Args:
+        data_dict (dict): A dictionary with the new index variable as the key and a dictionary of data values
+
+    Returns:
+        float: The average contract size of the data for the past year.
+    """
+    contractSize = 0
+    counter = 0
+    for value in data_dict.values():
+        if(value['Side'] == 'Buy' and datetime.strptime(extract_date(value['Filled Time']), '%m/%d/%Y') >= datetime.now() - pd.DateOffset(years=1)):
+            contractSize += float(value['Avg Price'])
+            counter += 1
+    return round(contractSize / counter, 2)
+
+def getAverageWinner (trades_dict):
+    """
+    Calculates the average winning trade of the data.
+
+    Args:
+        trades_dict (dict): A dictionary with the option contract as the key and the trade data as the value.
+    
+    Returns:
+        float: The average winning trade of the data.
+    """
+    winnerAmount = 0
+    winnerCount = 0
+    for value in trades_dict.values():
+        if value > 0:
+            winnerAmount += value
+            winnerCount += 1
+    return round(winnerAmount / winnerCount, 2), winnerCount
+
+def getAverageLoser (trades_dict):
+    """
+    Calculates the average winning trade of the data.
+
+    Args:
+        trades_dict (dict): A dictionary with the option contract as the key and the trade data as the value.
+    
+    Returns:
+        float: The average winning trade of the data.
+    """
+    loserAmount = 0
+    loserCount = 0
+    for value in trades_dict.values():
+        if value < 0:
+            loserAmount += value
+            loserCount += 1
+    return round(loserAmount / loserCount, 2), loserCount
+
 def getPLByStock(stock_dict):
     PLbyStock = {}
     for key, value in stock_dict.items():
         PLbyStock[key] = getPLOverall(value)
     return PLbyStock
 
-def getPLOverall (data_dict):
+def getPLOverall (trades_dict):
     """
     Calculates the P&L of the data.
 
@@ -77,15 +168,18 @@ def getPLOverall (data_dict):
     Returns:
         float: The P&L of the data.
     """
-    soldAmount = 0
-    boughtAmount = 0
-    for key, value in data_dict.items():
-        print(round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2))
-        if value['Side'] == 'Sell':
-            soldAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
-        else:
-            boughtAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
-    return soldAmount-boughtAmount
+    # soldAmount = 0
+    # boughtAmount = 0
+    # counter = 0
+    # for key, value in data_dict.items():
+    #     if value['Side'] == 'Sell':
+    #         soldAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
+    #         counter += 1
+    #     else:
+    #         boughtAmount += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
+    #         counter += 1
+    # return soldAmount-boughtAmount, counter
+    return sum(trades_dict.values()), len(trades_dict)
 
 def getPLDaily (data_dict):
     """
@@ -118,7 +212,11 @@ def getPLCumulative (data_dict):
     """
     cumulativePL = {}
     cumulative = 0
-    for key, value in data_dict.items():
+    
+    values_list = list(data_dict.values())
+    values_list.reverse()
+
+    for value in values_list:
         date = extract_date(value['Filled Time'])
         if value['Side'] == 'Sell':
             cumulative += round(float(value['Avg Price']) * float(value['Total Qty']) * 100, 2)
@@ -204,13 +302,29 @@ def initializeAPI(file_name):
 def get_pnl():
     file_name = request.args.get('file_name')
     data_dict = initializeAPI(file_name)
+    trades_dict = getTrades(data_dict)
     pnl_by_day = getPLDaily(data_dict)
-    total_pnl = getPLOverall(data_dict)
+    total_pnl, total_trades = getPLOverall(trades_dict)
     cumulative_pnl = getPLCumulative(data_dict)
+    average_contract_size = getAverageContractSizeFromPastYear(data_dict)
+    if average_contract_size != 0:
+        average_contract_size_change_from_past_year = round(average_contract_size / getAverageContractSize(data_dict), 2)
+    else:
+        average_contract_size_change_from_past_year = 0
+    average_winner_amount, average_winner_total_trades = getAverageWinner(trades_dict)
+    average_loser_amount, average_loser_total_trades = getAverageLoser(trades_dict)
+
     result = {
         "PnL_By_Day": pnl_by_day,
         "Total_PnL": total_pnl,
-        "Cumulative_PnL": cumulative_pnl
+        "Total_Trades": total_trades,
+        "Cumulative_PnL": cumulative_pnl,
+        "Average_Contract_Size": average_contract_size,
+        "Average_Contract_Size_Change": average_contract_size_change_from_past_year,
+        "Average_Winner": average_winner_amount,
+        "Average_Winner_Total_Trades": average_winner_total_trades,
+        "Average_Loser": average_loser_amount,
+        "Average_Loser_Total_Trades": average_loser_total_trades,
     }
     return jsonify(result)
 

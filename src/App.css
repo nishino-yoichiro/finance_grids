@@ -31,13 +31,12 @@ html, body, #root {
   margin: 0;
   width: 100%;
   height: auto;
-  gap: 1rem;
+  gap: 0.25rem;
 }
 
 .grid-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18vw, 1fr));
-  gap: 1rem;
   margin-bottom: 1rem;
-  gap: 1rem;
+  gap: 0.25rem;
 }

@@ -27,16 +27,18 @@ function Box({ type, width, height, content }) {
                             ) : (
                                 <div className="top-row">
                                     <div className={`value ${valueClass}`}>${Math.abs(content.value)}</div>
-                                    <div className={`average-trades ${averageTradesClass}`}>{Math.abs(content.averageTrades)}%</div>
+                                    {content.variation === 'averageCons' && (
+                                        <div className={`average-trades ${averageTradesClass}`}>{Math.abs(content.averageTrades)}</div>
+                                    )}
                                 </div>
                             )}
                     </>
                 )}
-                {type === 'Daily PnL' && (
+                {type === 'Charts' && (
                     <div className="box-daily-pnl">
                         <div className="label">{content.label}</div>
                         <div className="chart-container">
-                            <Chart />
+                            <Chart dataType={content.dataType}/>
                         </div>
                     </div>
                 )}

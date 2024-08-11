@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createChart } from 'lightweight-charts';
 
-const Chart = () => {
+const Chart = ({ dataType }) => {
     const chartContainerRef = useRef(null);
 
     useEffect(() => {
@@ -20,22 +20,34 @@ const Chart = () => {
             }
         };
         const chart = createChart(chartContainerRef.current, chartOptions);
-        
-        const areaSeries = chart.addAreaSeries({
-            lineColor: '#2962FF',
-            topColor: '#2962FF',
-            bottomColor: 'rgba(41, 98, 255, 0.28)',
-        });
+
+        let series;
+        if (dataType === 'Cumulative_PnL') {
+            series = chart.addBaselineSeries({
+                baseValue: { type: 'price', price: 0 },
+                topLineColor: 'rgba(38, 166, 154, 1)',
+                topFillColor1: 'rgba(38, 166, 154, 0.28)',
+                topFillColor2: 'rgba(38, 166, 154, 0.05)',
+                bottomLineColor: 'rgba(239, 83, 80, 1)',
+                bottomFillColor1: 'rgba(239, 83, 80, 0.05)',
+                bottomFillColor2: 'rgba(239, 83, 80, 0.28)',
+            });
+        } else {
+            series = chart.addHistogramSeries({ color: '#26a69a' });
+        }
 
         const fileName = 'orders.csv';
-        fetch(`http://localhost:5000/api/pnl?file_name=${fileName}`)
+        const url = `http://localhost:5000/api/pnl?file_name=${fileName}&type=${dataType}`;
+        
+        fetch(url)
             .then(response => response.json())
             .then(data => {
-                const formattedData = Object.keys(data.Cumulative_PnL).map(date => ({
+                const formattedData = Object.keys(data[dataType]).map(date => ({
                     time: new Date(date).toISOString().split('T')[0],
-                    value: data.Cumulative_PnL[date],
+                    value: data[dataType][date],
+                    color: data[dataType][date] >= 0 ? 'rgba(38, 166, 154, 1)' : 'rgba(239, 83, 80, 1)',
                 }));
-                areaSeries.setData(formattedData);
+                series.setData(formattedData);
                 chart.timeScale().fitContent();
             })
             .catch(error => console.error('Error fetching cumulative_PnL data:', error));
