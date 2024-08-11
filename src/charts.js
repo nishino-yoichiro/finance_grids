@@ -68,7 +68,7 @@ const Chart = ({ dataType }) => {
         return () => {
             chart.remove();
         };
-    }, []);
+    }, [dataType]);
 
     return <div ref={chartContainerRef} style={{ width: '100%', height: '90%' }}></div>;
 };

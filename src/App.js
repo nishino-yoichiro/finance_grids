@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from './Box';
 import './App.css';
-import { data } from 'autoprefixer';
 
 function App() {
     const [totalPnL, setTotalPnL] = useState(0);
@@ -40,7 +39,7 @@ function App() {
         ],
         [
             { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Net Cumulative P&L", dataType: 'Cumulative_PnL' }},
-            { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Net Cumulative P&L", dataType: 'PnL_By_Day'}},
+            { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily P&L ", dataType: 'PnL_By_Day'}},
             { type: 'Charts', width: '30vw', height: '30vw', content: { label: "Daily Net Cumulative P&L" }},
         ],
         [
